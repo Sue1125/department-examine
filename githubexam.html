@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+深职易班研发部GitHub培训考核
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Microsoft Yahei", sans-serif;
+    }
+
+    body {
+        background-color: #f0f7ff;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 850px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 4px 18px #cce0f5;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* 可爱小装饰 */
+    .decorate {
+        position: absolute;
+        width: 90px;
+        opacity: 0.6;
+        top: 10px;
+        right: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2b5cb8;
+        font-size: 26px;
+        margin-bottom: 12px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #7788aa;
+        margin-bottom: 30px;
+        font-size: 15px;
+    }
+
+    .q-block {
+        margin-bottom: 26px;
+        transition: 0.2s ease;
+    }
+
+    .q-block:hover {
+        transform: translateY(-3px);
+    }
+
+    .q-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #2c426b;
+        margin-bottom: 10px;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    input, textarea {
+        width: 100%;
+        border: 1px solid #c9d8f0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 15px;
+        background: #f8fbff;
+        transition: 0.3s;
+    }
+
+    textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+        outline: none;
+        border-color: #6298e9;
+        box-shadow: 0 0 6px #b9d4f8;
+    }
+
+    .btn-box {
+        text-align: center;
+        margin-top: 35px;
+    }
+
+    button {
+        background: #5498f0;
+        color: #fff;
+        border: none;
+        padding: 12px 32px;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #3b84e6;
+        transform: scale(1.03);
+    }
+
+    .tip {
+        margin-top: 20px;
+        font-size: 13px;
+        color: #8899bb;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- 可爱装饰 -->
+    <div class="decorate">☁️✨</div>
+
+    <h1>深职易班研发部 GitHub 培训考核</h1>
+    <div class="subtitle">请认真填写以下内容，填写完成后点击保存答案提交考核</div>
+
+    <div class="q-block">
+        <div class="q-title">姓名</div>
+        <input type="text" id="name" placeholder="请输入你的姓名/昵称">
+    </div>
+
+    <div class="q-block">
+        <div class="q-title">1. 简单自我介绍</div>
+        <textarea id="q1" placeholder="例如：年级、专业、性格、兴趣、特长等"></textarea>
+    </div>
+
+    <div class="q-block">
+        <div class="q-title">2. 你目前掌握的技术（编程语言、系统、网络、软件技能均可）</div>
+        <textarea id="q2" placeholder="例如：Python / Java / HTML / 单片机 / 计算机网络 / PS / 视频剪辑等"></textarea>
+    </div>
+
+    <div class="q-block">
+        <div class="q-title">3. 你为什么想要加入深职易班研发部？</div>
+        <textarea id="q3" placeholder="说说你的想法、期待、学习目标、成长规划"></textarea>
+    </div>
+
+    <div class="btn-box">
+        <button onclick="saveAllAnswer()">✅ 保存我的答案（提交考核）</button>
+    </div>
+
+    <div class="tip">
+        提示：全部内容为必填，填写完整才可保存<br>
+        保存后会自动下载新网页，直接覆盖提交即可
+    </div>
+</div>
+
+<script>
+// 锁定题目，不可修改
+document.querySelectorAll('.q-title').forEach(el => {
+    el.oncontextmenu = e => e.preventDefault();
+});
+
+// 必填校验 + 保存答案嵌入网页
+function saveAllAnswer() {
+    const name = document.getElementById("name").value.trim();
+    const q1 = document.getElementById("q1").value.trim();
+    const q2 = document.getElementById("q2").value.trim();
+    const q3 = document.getElementById("q3").value.trim();
+
+    // 校验
+    if(!name){ alert("请填写姓名！"); return; }
+    if(!q1){ alert("请完成第1题：自我介绍！"); return; }
+    if(!q2){ alert("请完成第2题：掌握的技术！"); return; }
+    if(!q3){ alert("请完成第3题：入部理由！"); return; }
+
+    // 读取完整网页源码
+    let html = document.documentElement.outerHTML;
+
+    // 答案写入底部隐藏注释
+    const data = `
+<!--
+===================== 考核作答存档 =====================
+姓名：${name}
+作答时间：${new Date().toLocaleString()}
+
+【1.自我介绍】
+${q1}
+
+【2.掌握技术】
+${q2}
+
+【3.入部理由】
+${q3}
+=========================================================
+-->
+`;
+
+    html = html.replace("</body>", data + "\n</body>");
+
+    // 下载新网页
+    const blob = new Blob([html], {type:"text/html"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "exam.html";
+    a.click();
+}
+</script>
+</body>
+</html>
